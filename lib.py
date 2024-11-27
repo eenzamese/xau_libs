@@ -232,8 +232,10 @@ def is_internet(in_hosts=[]): # pylint: disable=dangerous-default-value
         sp = Popen(command, stderr=PIPE, stdout=PIPE, shell=True)
         out, err = sp.communicate()
         if err:
+            logger.info('Error during checking host %s', host)
             continue
         if 'TTL' not in out.decode('866'):
+            logger.info('Error during decode check result host %s', host)
             continue
         else:
             result = {'result': True, 'content': 'Internet connection is OK'}
