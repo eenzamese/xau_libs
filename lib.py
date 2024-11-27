@@ -15,8 +15,33 @@ from datetime import datetime as dt
 from datetime import timedelta as td
 import requests # type: ignore # pylint: disable=import-error
 import pytz # type: ignore # pylint: disable=import-error
-from QuikPy import QuikPy # type: ignore # pylint: disable=import-error
+# from QuikPy.QuikPy import QuikPy # type: ignore # pylint: disable=import-error
+# print('Import OK')
+# constants
 
+if getattr(sys, 'frozen', False):
+    app_path = os.path.dirname(sys.executable)
+    EXEC_FORM = 'exe'
+
+elif __file__:
+    app_path = os.path.dirname(__file__)
+    EXEC_FORM = 'python'
+else:
+    sys.exit()
+
+RUN_MODE = 'TEST'
+LOG_START_TIME = re.sub(r"\W+", "_", str(time.ctime()))
+LOG_FILENAME = f'{app_path}{os.sep}xau_{LOG_START_TIME}.log'
+LOG_FMT_STRING = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+DB_NAME = f'{app_path}{os.sep}db_online.sqlite'
+PAST_TFRAME_MINUTES = 15
+
+logger = logging.getLogger(RUN_MODE)
+logging.basicConfig(format=LOG_FMT_STRING,
+                    datefmt='%d.%m.%Y %H:%M:%S',
+                    level=logging.INFO, # NOTSET/DEBUG/INFO/WARNING/ERROR/CRITICAL
+                    handlers=[logging.FileHandler(LOG_FILENAME),
+                              logging.StreamHandler()])
 
 def get_nasdaq_idx(in_idx_name='XAU'):
     """Get info from NASDAQ"""
@@ -148,7 +173,9 @@ def check_quik_connection():
     return result
 
 
-def get_price_back(in_table_name=BASE_TICKER, in_datetime='2024-09-04 21:00:00',
+#def get_price_back(in_table_name=BASE_TICKER, in_datetime='2024-09-04 21:00:00',
+#                   in_conn=None, in_c=None):
+def get_price_back(in_table_name='', in_datetime='2024-09-04 21:00:00',
                    in_conn=None, in_c=None):
     """Get price"""
     result = {'result': False, 'content': ''}
@@ -194,7 +221,8 @@ def get_date_back(in_table_name, in_conn=None, in_c=None):
         return result
 
 
-def is_internet(in_hosts=inet_hosts): # pylint: disable=dangerous-default-value
+# def is_internet(in_hosts=inet_hosts): # pylint: disable=dangerous-default-value
+def is_internet(in_hosts=[]): # pylint: disable=dangerous-default-value
     """Internet checking"""
     result = {'result': False, 'content': ''}
     for host in in_hosts:
