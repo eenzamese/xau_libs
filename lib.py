@@ -7,6 +7,7 @@ import time
 import json
 import sys
 import os
+import platform
 import sqlite3
 import itertools
 import pdb # pylint: disable=unused-import
@@ -228,13 +229,21 @@ def is_internet(in_hosts=[]): # pylint: disable=dangerous-default-value
     result = {'result': False, 'content': ''}
     for host in in_hosts:
         logger.info('Check host %s', host)
-        command = f'ping {host}'
+        if platform.system() == 'Linux':
+            command = f'ping -c 4 {host}'
+            code_page = 'UTF-8'
+            ttl_record = 'ttl'
+        else:
+            command = f'ping {host}'
+            code_page = '866'
+            ttl_record = 'TTL'
         sp = Popen(command, stderr=PIPE, stdout=PIPE, shell=True)
         out, err = sp.communicate()
         if err:
             logger.info('Error during checking host %s', host)
             continue
-        if 'TTL' not in out.decode('866'):
+        if ttl_record not in out.decode(code_page):
+            logger.debug('Output is %s', out.decode(code_page))
             logger.info('Error during decode check result host %s', host)
             continue
         else:
