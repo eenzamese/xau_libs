@@ -1,4 +1,3 @@
-*.pyc
 *.log
-QuikPy/*
 QuikPy
+__pycache__
