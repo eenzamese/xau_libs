@@ -17,6 +17,7 @@ import requests # type: ignore # pylint: disable=import-error
 import pytz # type: ignore # pylint: disable=import-error
 # from QuikPy.QuikPy import QuikPy # type: ignore # pylint: disable=import-error
 # print('Import OK')
+# some new
 # constants
 
 if getattr(sys, 'frozen', False):
