@@ -1,4 +1,5 @@
 *.log
+*.sqlite
 QuikPy/
 QuikPy
 __pycache__/
