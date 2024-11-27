@@ -227,6 +227,7 @@ def is_internet(in_hosts=[]): # pylint: disable=dangerous-default-value
     """Internet checking"""
     result = {'result': False, 'content': ''}
     for host in in_hosts:
+        logger.info('Check host %s', host)
         command = f'ping {host}'
         sp = Popen(command, stderr=PIPE, stdout=PIPE, shell=True)
         out, err = sp.communicate()
@@ -237,8 +238,8 @@ def is_internet(in_hosts=[]): # pylint: disable=dangerous-default-value
         else:
             result = {'result': True, 'content': 'Internet connection is OK'}
             return result
-    logger.critical('Internet connection FAIL')
-    sys.exit()
+    result['content'] = 'There are no available hosts'
+    return result
 
 
 def on_trans_reply(data):
