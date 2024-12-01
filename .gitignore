@@ -1,3 +1,5 @@
 *.log
 QuikPy/
+QuikPy
+__pycache__/
 __pycache__
