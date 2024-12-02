@@ -123,6 +123,7 @@ def tb_init(in_table_name, in_conn=None, in_c=None):
     """Get table initialization"""
     result = {'result': False, 'content': ''}
     table_name = in_table_name
+    logger.info('Create table %s', table_name)
     try:
         with in_conn:
             ti_statement = (f'create table if not exists "{table_name}" '
