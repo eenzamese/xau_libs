@@ -21,6 +21,9 @@ import pytz # type: ignore # pylint: disable=import-error
 # some new
 # constants
 
+TMT_REBOOT = 600
+
+
 if getattr(sys, 'frozen', False):
     app_path = os.path.dirname(sys.executable)
     EXEC_FORM = 'exe'
@@ -139,8 +142,13 @@ def tb_init(in_table_name, in_conn=None, in_c=None):
 
 def exit_script(in_qp_provider):
     """Exit script with quik connnection closing"""
-    in_qp_provider.close_connection_and_thread()
-    sys.exit()
+    try:
+        in_qp_provider.close_connection_and_thread()
+        result = {'result': True, 'content': ''}
+        return result
+    except Exception as ex:
+        result = {'result': False, 'content': str(ex)}
+        return result
 
 
 def tb_init_deels(in_table_name, in_conn=None, in_c=None):
@@ -264,14 +272,21 @@ def on_trans_reply(data):
     logger.info(str_out)
 
 
-def open_long(in_class_code='QJSIM', in_sec_code='SBER', in_quantity=1):
+def open_long(in_class_code='QJSIM',
+              in_sec_code='SBER',
+              in_quantity=1,
+              in_qp_provider=None,
+              in_last_price =None):
     """Open buy deel"""
+    class_code = in_class_code
     quantity = in_quantity
+    qp_provider = in_qp_provider
+    last_price = in_last_price
     # Ищем первый счет с режимом торгов тикера
-    accounts_bunch = (acc for acc in qp_provider.accounts if in_class_code in acc['class_codes'])
+    accounts_bunch = (acc for acc in qp_provider.accounts if class_code in acc['class_codes'])
     account = next(accounts_bunch, None)
     if not account:  # Если счет не найден
-        str_out = f'Торговый счет для режима торгов {in_class_code} не найден' # pylint: disable=redefined-outer-name
+        str_out = f'Торговый счет для режима торгов {class_code} не найден' # pylint: disable=redefined-outer-name
         logger.error(str_out)
         return False
     client_code = account['client_code'] if account['client_code'] else ''
@@ -372,9 +387,15 @@ def open_long(in_class_code='QJSIM', in_sec_code='SBER', in_quantity=1):
     # print(f'Удаление стоп заявки с сервера: {qp_provider.send_transaction(transaction)["data"]}')
 
 
-def close_long(in_class_code='QJSIM', in_sec_code='SBER', in_quantity=1):
+def close_long(in_class_code='QJSIM',
+               in_sec_code='SBER',
+               in_quantity=1,
+               in_qp_provider=None,
+               in_last_price=None):
     """Close buy"""
     quantity = in_quantity
+    qp_provider = in_qp_provider
+    last_price = in_last_price
     cl_accounts_bunch = (acc for acc in qp_provider.accounts if in_class_code in acc['class_codes'])
     account = next(cl_accounts_bunch, None)
     if not account:  # Если счет не найден
