@@ -161,9 +161,10 @@ def tb_init_deels(in_table_name, in_conn=None, in_c=None):
     return result
 
 
-def check_quik_connection():
+def check_quik_connection(in_qp_provider):
     """Checking QUIK connection"""
     result = {'result': False, 'content': ''}
+    qp_provider = in_qp_provider
     # Состояние подключения терминала к серверу QUIK
     is_connected = qp_provider.is_connected()['data']
     if is_connected == 0:
