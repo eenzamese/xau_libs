@@ -8,14 +8,12 @@ import json
 import sys
 import os
 import platform
-import sqlite3
 import itertools
 import pdb # pylint: disable=unused-import
 from subprocess import Popen, PIPE
 from datetime import datetime as dt
 from datetime import timedelta as td
 import requests # type: ignore # pylint: disable=import-error
-import pytz # type: ignore # pylint: disable=import-error
 # from QuikPy.QuikPy import QuikPy # type: ignore # pylint: disable=import-error
 # print('Import OK')
 # some new
@@ -140,10 +138,11 @@ def tb_init(in_table_name, in_conn=None, in_c=None):
     return result
 
 
-def exit_script(in_qp_provider):
+def exit_script(in_qp_provider=None):
     """Exit script with quik connnection closing"""
+    qp_provider = in_qp_provider
     try:
-        in_qp_provider.close_connection_and_thread()
+        qp_provider.close_connection_and_thread()
         result = {'result': True, 'content': ''}
         return result
     except Exception as ex:
@@ -170,7 +169,7 @@ def tb_init_deels(in_table_name, in_conn=None, in_c=None):
     return result
 
 
-def check_quik_connection(in_qp_provider):
+def check_quik_connection(in_qp_provider=None):
     """Checking QUIK connection"""
     result = {'result': False, 'content': ''}
     qp_provider = in_qp_provider
@@ -187,8 +186,10 @@ def check_quik_connection(in_qp_provider):
 
 #def get_price_back(in_table_name=BASE_TICKER, in_datetime='2024-09-04 21:00:00',
 #                   in_conn=None, in_c=None):
-def get_price_back(in_table_name='', in_datetime='2024-09-04 21:00:00',
-                   in_conn=None, in_c=None):
+def get_price_back(in_table_name='',
+                   in_datetime='2024-09-04 21:00:00',
+                   in_conn=None,
+                   in_c=None):
     """Get price"""
     result = {'result': False, 'content': ''}
     gpb_dt = in_datetime
@@ -601,8 +602,9 @@ def close_deel(in_sym, in_conn=None, in_c=None):
         return result
 
 
-def get_current_balance():
+def get_current_balance(in_qp_provider):
     """Get current balance"""
+    qp_provider = in_qp_provider
     result = {'result': False, 'content': ''}
     try:
         result = {'result': False, 'content': ''}
@@ -614,9 +616,11 @@ def get_current_balance():
     return result
 
 
-def get_lot_price(in_class_code='QJSIM', in_sec_code='SBER'):
+def get_lot_price(in_class_code='QJSIM', in_sec_code='SBER', in_qp_provider=None, in_last_price=None):
     """Get lot price"""
     result = {'result': False, 'content': ''}
+    last_price = in_last_price
+    qp_provider = in_qp_provider
     glp_si = qp_provider.get_symbol_info(in_class_code, in_sec_code)
     scale = glp_si['scale']
     glp_last_price = qp_provider.get_param_ex(in_class_code, in_sec_code, 'LAST')['data']
