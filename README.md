@@ -34,6 +34,6 @@ EN: Project Link: [https://github.com/eenzamese/xau_libs](https://github.com/een
 
 
 
-RU: Автор используемой в проекте бибилиотеки QuikPy - Чечет Игорь Александрович.<br/>
-При распространении ссылка на автора (https://github.com/cia76) и проект (https://github.com/cia76/QuikPy) обязательны.
+RU: Автор используемой в проекте бибилиотеки QuikPy - Чечет Игорь Александрович.
+При распространении ссылка на автора (https://github.com/cia76) и проект (https://github.com/cia76/QuikPy) обязательны.<br/>
 EN: QuikPy author, used as part of this project - Chechet Igor Alexandrovich. For any usage of this library link to the author (https://github.com/cia76) and project (https://github.com/cia76/QuikPy) required
