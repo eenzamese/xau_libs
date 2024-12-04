@@ -17,23 +17,8 @@ import requests # type: ignore # pylint: disable=import-error
 
 TMT_REBOOT = 600
 
-def logger_config(in_log_dir=None):
-    log_dir = in_log_dir
-    LOG_START_TIME = re.sub(r"\W+", "_", str(time.ctime()))
-    LOG_FILENAME = f'{log_dir}{os.sep}xau_libs_{LOG_START_TIME}.log'
-    LOG_FMT_STRING = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 
-
-    out_logger = logging.getLogger('XAU_LIBS')
-    logging.basicConfig(format=LOG_FMT_STRING,
-                        datefmt='%d.%m.%Y %H:%M:%S',
-                        level=logging.INFO, # NOTSET/DEBUG/INFO/WARNING/ERROR/CRITICAL
-                        handlers=[logging.FileHandler(LOG_FILENAME),
-                                logging.StreamHandler()])
-    return out_logger
-
-logger = logger_config()
-
+logger = logging.getLogger('XAU')
 
 def get_nasdaq_idx(in_idx_name='XAU'):
     """Get info from NASDAQ"""
