@@ -175,6 +175,7 @@ def check_quik_connection(in_qp_provider=None):
     is_connected = qp_provider.is_connected()['data']
     if is_connected == 0:
         str_out = 'Server connection' # pylint: disable=redefined-outer-name
+        logger.critical(inspect.currentframe().f_code.co_name)
         logger.critical(str_out)
         time.sleep(TMT_REBOOT)
         os.system('shutdown /r')
@@ -222,7 +223,7 @@ def get_date_back(in_table_name, in_conn=None, in_c=None):
             date = in_c.execute(gdb_statement).fetchone()
     except Exception as ex: # pylint: disable=broad-exception-caught
         logger.critical(inspect.currentframe().f_code.co_name)
-        logger.critical(ex)
+        logger.critical(str(ex))
         sys.exit()
     if date:
         date = date[0]
@@ -531,8 +532,8 @@ def get_active_deels(in_table_name, in_conn=None, in_c=None):
             gad_statement = f'select status from "{table_name}" where status == "active";'
             state = in_c.execute(gad_statement).fetchone()
     except Exception as ex: # pylint: disable=broad-exception-caught
-        logger.critical(str(ex))
         logger.critical(inspect.currentframe().f_code.co_name)
+        logger.critical(str(ex))
         sys.exit()
     if state:
         state = state[0]
@@ -659,8 +660,8 @@ def get_deel_quant(in_table_name, in_conn=None, in_c=None):
                          'where status == "active" limit 1;')
             state = in_c.execute(gdq_statement).fetchone()
     except Exception as ex: # pylint: disable=broad-exception-caught
-        logger.critical(str(ex))
         logger.critical(inspect.currentframe().f_code.co_name)
+        logger.critical(str(ex))
         sys.exit()
     if state:
         state = state[0]
