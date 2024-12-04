@@ -34,7 +34,7 @@ else:
 
 RUN_MODE = 'TEST'
 LOG_START_TIME = re.sub(r"\W+", "_", str(time.ctime()))
-LOG_FILENAME = f'{app_path}{os.sep}xau_{LOG_START_TIME}.log'
+LOG_FILENAME = f'{app_path}{os.sep}xau_libs_{LOG_START_TIME}.log'
 LOG_FMT_STRING = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 DB_NAME = f'{app_path}{os.sep}db_online.sqlite'
 PAST_TFRAME_MINUTES = 15
@@ -48,6 +48,7 @@ logging.basicConfig(format=LOG_FMT_STRING,
 
 def get_nasdaq_idx(in_idx_name='XAU'):
     """Get info from NASDAQ"""
+    result = {'result': False, 'content': ''}
     idx_name = in_idx_name
     str_out = f'Index is {idx_name}' # pylint: disable=redefined-outer-name
     logger.debug(str_out)
@@ -99,7 +100,8 @@ def get_nasdaq_idx(in_idx_name='XAU'):
         response = requests.post(nasdaq_url,
                                  cookies=cookies,
                                  headers=headers,
-                                 data=data)
+                                 data=data,
+                                 timeout=4)
     except Exception as ex: # pylint: disable=broad-exception-caught
         str_out = f'Get NASDAQ index request. Exception is {str(ex)}'
         result = {'result': False, 'content': str_out}
@@ -131,21 +133,22 @@ def tb_init(in_table_name, in_conn=None, in_c=None):
                             '(date text, '
                             'price float);')
             in_c.execute(ti_statement)
+        result = {'result': True, 'content': ''}
+        return result
     except Exception as ex: # pylint: disable=broad-exception-caught
         result = {'result': False, 'content': str(ex)}
         return result
-    result = {'result': True, 'content': ''}
-    return result
 
 
 def exit_script(in_qp_provider=None):
     """Exit script with quik connnection closing"""
+    result = {'result': False, 'content': ''}
     qp_provider = in_qp_provider
     try:
         qp_provider.close_connection_and_thread()
         result = {'result': True, 'content': ''}
         return result
-    except Exception as ex:
+    except Exception as ex: # pylint: disable=broad-exception-caught
         result = {'result': False, 'content': str(ex)}
         return result
 
@@ -266,11 +269,14 @@ def is_internet(in_hosts=[]): # pylint: disable=dangerous-default-value
 
 def on_trans_reply(data):
     """Обработчик события ответа на транзакцию пользователя"""
+    result = {'result': False, 'content': ''}
     str_out = f'OnTransReply: {data}' # pylint: disable=redefined-outer-name
     logger.info(str_out)
     order_num = int(data['data']['order_num'])  # Номер заявки на бирже
     str_out = f'Номер транзакции: {data["data"]["trans_id"]}, Номер заявки: {order_num}'
+    result = {'result': True, 'content': ''}
     logger.info(str_out)
+    return result
 
 
 def open_long(in_class_code='QJSIM',
@@ -279,6 +285,7 @@ def open_long(in_class_code='QJSIM',
               in_qp_provider=None,
               in_last_price =None):
     """Open buy deel"""
+    result = {'result': False, 'content': ''}
     class_code = in_class_code
     quantity = in_quantity
     qp_provider = in_qp_provider
@@ -289,7 +296,8 @@ def open_long(in_class_code='QJSIM',
     if not account:  # Если счет не найден
         str_out = f'Торговый счет для режима торгов {class_code} не найден' # pylint: disable=redefined-outer-name
         logger.error(str_out)
-        return False
+        result = {'result': False, 'content': ''}
+        return result
     client_code = account['client_code'] if account['client_code'] else ''
     trade_account_id = account['trade_account_id']
     # si = qp_provider.get_symbol_info(in_class_code, sec_code)
@@ -316,7 +324,8 @@ def open_long(in_class_code='QJSIM',
     # lambda data: logger.info(f'OnDepoLimitDelete: {data}')
     # Удаление позиции по инструментам
     # Новая рыночная заявка (открытие позиции)
-    market_price = qp_provider.price_to_quik_price(class_code, in_sec_code,
+    market_price = qp_provider.price_to_quik_price(class_code,
+                                                   in_sec_code,
                                                    qp_provider.quik_price_to_price(class_code,
                                                                                    in_sec_code,
                                                                                    last_price * 1.01)) if account['futures'] else 0
@@ -333,7 +342,8 @@ def open_long(in_class_code='QJSIM',
         'TYPE': 'M'}  # L = лимитная заявка (по умолчанию), M = рыночная заявка
     str_out = f'Заявка отправлена на рынок: {qp_provider.send_transaction(transaction)["data"]}'
     logger.info(str_out)
-    return True
+    result = {'result': True, 'content': ''}
+    return result
     # # Закрываем соединение для запросов и поток обработки функций обратного вызова
     # # Новая рыночная заявка (закрытие позиции)
     # market_price = qp_provider.price_to_quik_price(class_code, sec_code,
@@ -394,6 +404,7 @@ def close_long(in_class_code='QJSIM',
                in_qp_provider=None,
                in_last_price=None):
     """Close buy"""
+    result = {'result': False, 'content': ''}
     quantity = in_quantity
     qp_provider = in_qp_provider
     last_price = in_last_price
@@ -452,7 +463,8 @@ def close_long(in_class_code='QJSIM',
         'TYPE': 'M'}  # L = лимитная заявка (по умолчанию), M = рыночная заявка
     str_out = f'Заявка отправлена на рынок: {qp_provider.send_transaction(transaction)["data"]}'
     logger.info(str_out) # pylint: disable=redefined-outer-name
-    return True
+    result = {'result': True, 'content': 'Deel succesfully closed'}
+    return result
     # # Новая лимитная заявка
     # limit_price = qp_provider.price_to_quik_price(class_code, sec_code,
     # qp_provider.quik_price_to_price(class_code, sec_code, last_price * 0.99))
@@ -498,18 +510,19 @@ def close_long(in_class_code='QJSIM',
 
 def fix_deel(in_tb_name, in_state, in_quant, in_conn=None, in_c=None):
     """Deel fixation"""
+    result = {'result': False, 'content': ''}
     state = in_state
     tb_name = in_tb_name
     if state == 'done':
         with in_conn:
             fd_statement = f"update '{tb_name}_deels' set status = '{state}';"
             in_c.execute(fd_statement)
-        return True
+        return result
     with in_conn:
         fd_1_statement = f"insert into '{tb_name}_deels' \
                           values('{dt.now()}', '{state}', '{in_quant}');"
         in_c.execute(fd_1_statement)
-    return True
+    return result
 
 
 def get_active_deels(in_table_name, in_conn=None, in_c=None):
@@ -536,6 +549,7 @@ def get_active_deels(in_table_name, in_conn=None, in_c=None):
 
 def load_db_content(in_conn=None, in_c=None):
     """Imitate DB content"""
+    result = {'result': False, 'content': ''}
     price_xau = float('143.76')
     price_poly = float('243.6')
     price_plzl = float('12060.5')
@@ -576,7 +590,8 @@ def load_db_content(in_conn=None, in_c=None):
             ldc_1_statement = f"insert into 'PLZL' \
                               values('{now_date}', '{price_selg+price_delta}');"
             in_c.execute(ldc_1_statement)
-    return True
+    result = {'result': True, 'content': ''}
+    return result
 
 
 def close_deel(in_sym, in_conn=None, in_c=None):
@@ -604,8 +619,8 @@ def close_deel(in_sym, in_conn=None, in_c=None):
 
 def get_current_balance(in_qp_provider):
     """Get current balance"""
-    qp_provider = in_qp_provider
     result = {'result': False, 'content': ''}
+    qp_provider = in_qp_provider
     try:
         result = {'result': False, 'content': ''}
         gcb_cur_balance = qp_provider.get_money_limits()['data'][0]['currentbal']
@@ -616,7 +631,10 @@ def get_current_balance(in_qp_provider):
     return result
 
 
-def get_lot_price(in_class_code='QJSIM', in_sec_code='SBER', in_qp_provider=None, in_last_price=None):
+def get_lot_price(in_class_code='QJSIM',
+                  in_sec_code='SBER',
+                  in_qp_provider=None,
+                  in_last_price=None):
     """Get lot price"""
     result = {'result': False, 'content': ''}
     last_price = in_last_price
@@ -655,5 +673,3 @@ def get_deel_quant(in_table_name, in_conn=None, in_c=None):
         str_out = f'Failed to get amount price for {table_name}' # pylint: disable=redefined-outer-name
         result = {'result': False, 'content': str_out}
         return result
-
-
