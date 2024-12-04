@@ -20,9 +20,9 @@ Just as a part of your own logic
 
 ## Contact
 
-eenzamese@gmail.com
+eenzamse@gmail.com
 
-Project Link: [https://github.com/eenzamese/gate](https://github.com/eenzamese/xau_libs)
+Project Link: [https://github.com/eenzamese/xau_libs](https://github.com/eenzamese/xau_libs)
 
 
 Автор используемой в проекте бибилиотеки QuikPy - Чечет Игорь Александрович.
