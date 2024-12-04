@@ -174,12 +174,12 @@ def check_quik_connection(in_qp_provider=None):
     # Состояние подключения терминала к серверу QUIK
     is_connected = qp_provider.is_connected()['data']
     if is_connected == 0:
-        str_out = 'Server connection' # pylint: disable=redefined-outer-name
+        str_out = 'QUIK connection failed' # pylint: disable=redefined-outer-name
         logger.critical(inspect.currentframe().f_code.co_name)
         logger.critical(str_out)
         time.sleep(TMT_REBOOT)
         os.system('shutdown /r')
-    result = {'result': True, 'content': 'QUIK initialization'}
+    result = {'result': True, 'content': 'QUIK connection is OK'}
     return result
 
 
