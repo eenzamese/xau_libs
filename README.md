@@ -3,9 +3,8 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-[![Product Name Screen Shot][product-screen]](https://example.com)
 
-QUIK processing library
+Just another QUIK processing library for internal projects.
 
 ## Installation
 
@@ -13,10 +12,14 @@ Clone the repo
    ```sh
    git clone https://github.com/eenzamese/xau_libs
    ```
+Don't forget to pull submodules
+   ```sh
+   git submodule update --init recursive
+   ```
 
 ## Usage
 
-Just as a part of your own logic
+Only as a part of your own logic
 
 ## Contact
 
@@ -26,4 +29,4 @@ Project Link: [https://github.com/eenzamese/xau_libs](https://github.com/eenzame
 
 
 Автор используемой в проекте бибилиотеки QuikPy - Чечет Игорь Александрович.
-Библиотека написана в рамках проекта Финансовая Лаборатория и предоставляется бесплатно. При распространении ссылка на автора и проект обязательны.
+Библиотека написана в рамках проекта Финансовая Лаборатория и предоставляется бесплатно. При распространении ссылка на автора (https://github.com/cia76) и проект (https://github.com/cia76/QuikPy) обязательны.
