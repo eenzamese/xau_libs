@@ -39,7 +39,8 @@ def get_nasdaq_idx(in_idx_name='XAU'):
                 '_biz_flagsA': ('%7B%22Version%22%3A1%2C%22View'
                                 'Through%22%3A%221%22%2C%22X'
                                 'Domain%22%3A%221%22%2C%22Mkto%22%3A%221%22%7D'),
-                'incap_ses_1686_2594168': '69paenxeeiXg87fwHOBlFzES32YAAAAAS8n0Dn/nMvlXIEjU+rEhJg==',
+                'incap_ses_1686_2594168': ('69paenxeeiXg87fwHOBlFzES32Y'
+                                           'AAAAAS8n0Dn/nMvlXIEjU+rEhJg=='),
                 '_biz_nA': '16',
                 '_biz_pendingA': '%5B%5D',
                 '_ga_5YP0JZFRFE': 'GS1.1.1725895220.6.0.1725895220.60.0.0',
@@ -326,11 +327,8 @@ def open_long(in_class_code='QJSIM',
     # lambda data: logger.info(f'OnDepoLimitDelete: {data}')
     # Удаление позиции по инструментам
     # Новая рыночная заявка (открытие позиции)
-    market_price = qp_provider.price_to_quik_price(class_code,
-                                                   in_sec_code,
-                                                   qp_provider.quik_price_to_price(class_code,
-                                                                                   in_sec_code,
-                                                                                   last_price * 1.01)) if account['futures'] else 0
+    q_p_t_p = qp_provider.quik_price_to_price(class_code, in_sec_code, last_price * 1.01)
+    market_price = qp_provider.price_to_quik_price(class_code, in_sec_code, q_p_t_p) if account['futures'] else 0
     transaction = {  # Все значения должны передаваться в виде строк
         'TRANS_ID': str(next(trans_id)),  # Следующий номер транзакции
         'CLIENT_CODE': client_code,  # Код клиента
@@ -446,11 +444,10 @@ def close_long(in_class_code='QJSIM',
     # qp_provider.on_depo_limit_delete =
     # lambda data: logger.info(f'OnDepoLimitDelete: {data}')  # Удаление позиции по инструментам
     # Новая рыночная заявка (закрытие позиции)
-    market_price = qp_provider.price_to_quik_price(in_class_code,
-                                                   in_sec_code,
-                                                   qp_provider.quik_price_to_price(in_class_code,
-                                                                                   in_sec_code,
-                                                                                   last_price * 0.99)) if account['futures'] else 0  # Цена исполнения по рынку. Для фьючерсных заявок цена больше последней при покупке и меньше последней при продаже. Для остальных заявок цена = 0
+    q_p_t_p = qp_provider.quik_price_to_price(in_class_code, in_sec_code, last_price * 0.99)
+    # Цена исполнения по рынку. Для фьючерсных заявок цена больше последней при покупке и
+    # меньше последней при продаже. Для остальных заявок цена = 0
+    market_price = qp_provider.price_to_quik_price(in_class_code, in_sec_code, q_p_t_p) if account['futures'] else 0
     str_out = f'Заявка {in_class_code}.{in_sec_code} на продажу минимального лота по рыночной цене'
     logger.info(str_out)
     transaction = {  # Все значения должны передаваться в виде строк
