@@ -197,7 +197,8 @@ def get_date_back(in_table_name, in_conn=None, in_c=None):
     except Exception as ex: # pylint: disable=broad-exception-caught
         logger.critical(inspect.currentframe().f_code.co_name)
         logger.critical(str(ex))
-        sys.exit()
+        result = {'result': False, 'content': str(ex)}
+        return result
     if date:
         date = date[0]
         result = {'result': True, 'content': date}
@@ -582,7 +583,7 @@ def close_deel(in_sym, in_conn=None, in_c=None):
     except Exception as ex: # pylint: disable=broad-exception-caught
         logger.critical(inspect.currentframe().f_code.co_name)
         logger.critical(str(ex))
-        sys.exit()
+        result = {'result': False, 'content': str(ex)}
     if date:
         date = date[0]
         result = {'result': True, 'content': date}
@@ -639,7 +640,8 @@ def get_deel_quant(in_table_name, in_conn=None, in_c=None):
     except Exception as ex: # pylint: disable=broad-exception-caught
         logger.critical(inspect.currentframe().f_code.co_name)
         logger.critical(str(ex))
-        sys.exit()
+        result = {'result': False, 'content': str(ex)}
+        return result
     if state:
         state = state[0]
         result = {'result': True, 'content': state}
