@@ -82,7 +82,8 @@ def get_nasdaq_idx(in_idx_name='XAU'):
     if response.status_code != 200:
         str_out = (f'Get NASDAQ index status. '
                    f'Status code is {str(response.status_code)}')
-        result = {'result': False, 'content': str_out}
+        f_name = inspect.currentframe().f_code.co_name
+        result = {'result': False, 'content': f'{f_name}. {str_out}'}
         return result
     try:
         response_j = json.loads(response.content)
@@ -204,7 +205,8 @@ def get_price_back(in_table_name='',
         return result
     else:
         str_out = f'Failed to get past price for {table_name}' # pylint: disable=redefined-outer-name
-        result = {'result': False, 'content': str_out}
+        f_name = inspect.currentframe().f_code.co_name
+        result = {'result': False, 'content': f'{f_name}. {str_out}'}
         return result
 
 
@@ -230,7 +232,8 @@ def get_date_back(in_table_name, in_conn=None, in_c=None):
         return result
     else:
         str_out = f'Failed to get past date for {table_name}' # pylint: disable=redefined-outer-name
-        result = {'result': False, 'content': str_out}
+        f_name = inspect.currentframe().f_code.co_name
+        result = {'result': False, 'content': f'{f_name}. {str_out}'}
         return result
 
 
@@ -260,7 +263,9 @@ def is_internet(in_hosts=[]): # pylint: disable=dangerous-default-value
         else:
             result = {'result': True, 'content': 'Internet connection is OK'}
             return result
-    result = {'result': False, 'content': 'There are no available hosts'}
+    str_out = 'There are no available hosts'
+    f_name = inspect.currentframe().f_code.co_name
+    result = {'result': False, 'content': f'{f_name}. {str_out}'}
     return result
 
 
@@ -292,8 +297,8 @@ def open_long(in_class_code='QJSIM',
     account = next(accounts_bunch, None)
     if not account:  # Если счет не найден
         str_out = f'Торговый счет для режима торгов {class_code} не найден' # pylint: disable=redefined-outer-name
-        logger.error(str_out)
-        result = {'result': False, 'content': str_out}
+        f_name = inspect.currentframe().f_code.co_name
+        result = {'result': False, 'content': f'{f_name}. {str_out}'}
         return result
     client_code = account['client_code'] if account['client_code'] else ''
     trade_account_id = account['trade_account_id']
@@ -409,8 +414,8 @@ def close_long(in_class_code='QJSIM',
     account = next(cl_accounts_bunch, None)
     if not account:  # Если счет не найден
         str_out = f'Торговый счет для режима торгов {in_class_code} не найден' # pylint: disable=redefined-outer-name
-        logger.error(str_out)
-        result = {'result': False, 'content': str_out}
+        f_name = inspect.currentframe().f_code.co_name
+        result = {'result': False, 'content': f'{f_name}. {str_out}'}
         return result
     client_code = account['client_code'] if account['client_code'] else ''
     # Счет
@@ -548,7 +553,8 @@ def get_active_deels(in_table_name, in_conn=None, in_c=None):
         return result
     else:
         str_out = f'Failed to get past price for {table_name}' # pylint: disable=redefined-outer-name
-        result = {'result': False, 'content': str_out}
+        f_name = inspect.currentframe().f_code.co_name
+        result = {'result': False, 'content': f'{f_name}. {str_out}'}
         return result
 
 
@@ -575,7 +581,8 @@ def close_deel(in_sym, in_conn=None, in_c=None):
         return result
     else:
         str_out = f'Failed to get past date for {table_name}' # pylint: disable=redefined-outer-name
-        result = {'result': False, 'content': str_out}
+        f_name = inspect.currentframe().f_code.co_name
+        result = {'result': False, 'content': f'{f_name}. {str_out}'}
         return result
 
 
@@ -641,5 +648,6 @@ def get_deel_quant(in_table_name, in_conn=None, in_c=None):
         return result
     else:
         str_out = f'Failed to get amount price for {table_name}' # pylint: disable=redefined-outer-name
-        result = {'result': False, 'content': str_out}
+        f_name = inspect.currentframe().f_code.co_name
+        result = {'result': False, 'content': f'{f_name}. {str_out}'}
         return result
