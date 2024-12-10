@@ -1,7 +1,6 @@
 """Trading module includes Quik connection to MOEX, NASDAQ connection to off website"""
 import logging
 import inspect
-import random
 import time
 import json
 import os
@@ -9,7 +8,6 @@ import platform
 import itertools
 from subprocess import Popen, PIPE
 from datetime import datetime as dt
-from datetime import timedelta as td
 import requests # type: ignore # pylint: disable=import-error
 
 
@@ -552,54 +550,6 @@ def get_active_deels(in_table_name, in_conn=None, in_c=None):
         str_out = f'Failed to get past price for {table_name}' # pylint: disable=redefined-outer-name
         result = {'result': False, 'content': str_out}
         return result
-
-
-# to remove
-def load_db_content(in_conn=None, in_c=None):
-    """Imitate DB content"""
-    result = {'result': False, 'content': ''}
-    price_xau = float('143.76')
-    price_poly = float('243.6')
-    price_plzl = float('12060.5')
-    price_selg = float('47.39')
-    for i in range(100):
-        price_delta = random.randint(0, 5)
-        now_date = dt.now()
-        now_date = now_date - td(seconds=now_date.second)
-        now_date = now_date - td(minutes=i)
-        with in_conn:
-            ldc_statement = f"insert into 'XAU' \
-                            values('{now_date}', '{price_xau+price_delta}');"
-            in_c.execute(ldc_statement)
-    for i in range(100):
-        price_delta = random.randint(0, 5)
-        now_date = dt.now()
-        now_date = now_date - td(seconds=now_date.second)
-        now_date = now_date - td(minutes=i)
-        with in_conn:
-            ldc_1_statement = f"insert into 'POLY' \
-                          values('{now_date}', '{price_poly+price_delta}');"
-            in_c.execute(ldc_1_statement)
-    for i in range(100):
-        price_delta = random.randint(10, 30)
-        now_date = dt.now()
-        now_date = now_date - td(seconds=now_date.second)
-        now_date = now_date - td(minutes=i)
-        with in_conn:
-            ldc_statement = f"insert into 'PLZL' \
-                          values('{now_date}', '{price_plzl+price_delta}');"
-            in_c.execute(ldc_statement)
-    for i in range(100):
-        price_delta = random.randint(1, 5)
-        now_date = dt.now()
-        now_date = now_date - td(seconds=now_date.second)
-        now_date = now_date - td(minutes=i)
-        with in_conn:
-            ldc_1_statement = f"insert into 'PLZL' \
-                              values('{now_date}', '{price_selg+price_delta}');"
-            in_c.execute(ldc_1_statement)
-    result = {'result': True, 'content': ''}
-    return result
 
 
 def close_deel(in_sym, in_conn=None, in_c=None):
