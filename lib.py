@@ -88,6 +88,8 @@ def get_nasdaq_idx(in_idx_name='XAU'):
         return result
     try:
         response_j = json.loads(response.content)
+        result = {'result': True, 'content': response_j}
+        return result
     except Exception as ex: # pylint: disable=broad-exception-caught
         str_out = 'Get NASDAQ index content'
         f_name = inspect.currentframe().f_code.co_name
@@ -96,11 +98,6 @@ def get_nasdaq_idx(in_idx_name='XAU'):
         logger.critical(str(ex))
         result = {'result': False, 'content': f'{str_out}. {f_name}. {str(ex)}'}
         return result
-
-
-
-    result = {'result': True, 'content': response_j}
-    return result
 
 
 def tb_init(in_table_name, in_conn=None, in_c=None):
@@ -155,8 +152,8 @@ def tb_init_deels(in_table_name, in_conn=None, in_c=None):
                               'status float, '
                               'amount text);')
             in_c.execute(tid_statement)
-            result = {'result': True, 'content': f'Statement "{tid_statement}" done'}
-            return result
+        result = {'result': True, 'content': f'Statement "{tid_statement}" done'}
+        return result
     except Exception as ex: # pylint: disable=broad-exception-caught
         str_out = 'Table initialization deels error'
         f_name = inspect.currentframe().f_code.co_name
@@ -522,12 +519,13 @@ def fix_deel(in_tb_name, in_state, in_quant, in_conn=None, in_c=None):
             in_c.execute(fd_statement)
         result = {'result': True, 'content': 'Transaction processed'}
         return result
-    with in_conn:
-        fd_1_statement = f"insert into '{tb_name}_deels' \
-                          values('{dt.now()}', '{state}', '{in_quant}');"
-        in_c.execute(fd_1_statement)
-        result = {'result': True, 'content': 'Setting transaction processed'}
-        return result
+    else:
+        with in_conn:
+            fd_1_statement = f"insert into '{tb_name}_deels' \
+                            values('{dt.now()}', '{state}', '{in_quant}');"
+            in_c.execute(fd_1_statement)
+            result = {'result': True, 'content': 'Setting transaction processed'}
+            return result
 
 
 def get_active_deels(in_table_name, in_conn=None, in_c=None):
