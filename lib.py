@@ -4,7 +4,6 @@ import inspect
 import random
 import time
 import json
-import sys
 import os
 import platform
 import itertools
@@ -75,8 +74,12 @@ def get_nasdaq_idx(in_idx_name='XAU'):
                                  data=data,
                                  timeout=4)
     except Exception as ex: # pylint: disable=broad-exception-caught
-        str_out = f'Get NASDAQ index request. Exception is {str(ex)}'
-        result = {'result': False, 'content': str_out}
+        str_out = 'Get NASDAQ index request'
+        f_name = inspect.currentframe().f_code.co_name
+        logger.critical(str_out)
+        logger.critical(f_name)
+        logger.critical(str(ex))
+        result = {'result': False, 'content': f'{str_out}. {f_name}. {str(ex)}'}
         return result
     if response.status_code != 200:
         str_out = (f'Get NASDAQ index status. '
@@ -86,10 +89,16 @@ def get_nasdaq_idx(in_idx_name='XAU'):
     try:
         response_j = json.loads(response.content)
     except Exception as ex: # pylint: disable=broad-exception-caught
-        str_out = (f'Get NASDAQ index content'
-                   f'Exception is {str(ex)}')
-        result = {'result': False, 'content': str_out}
+        str_out = 'Get NASDAQ index content'
+        f_name = inspect.currentframe().f_code.co_name
+        logger.critical(str_out)
+        logger.critical(f_name)
+        logger.critical(str(ex))
+        result = {'result': False, 'content': f'{str_out}. {f_name}. {str(ex)}'}
         return result
+
+
+
     result = {'result': True, 'content': response_j}
     return result
 
@@ -108,7 +117,12 @@ def tb_init(in_table_name, in_conn=None, in_c=None):
         result = {'result': True, 'content': ''}
         return result
     except Exception as ex: # pylint: disable=broad-exception-caught
-        result = {'result': False, 'content': str(ex)}
+        str_out = 'Table initialization error'
+        f_name = inspect.currentframe().f_code.co_name
+        logger.critical(str_out)
+        logger.critical(f_name)
+        logger.critical(str(ex))
+        result = {'result': False, 'content': f'{str_out}. {f_name}. {str(ex)}'}
         return result
 
 
@@ -121,7 +135,12 @@ def exit_script(in_qp_provider=None):
         result = {'result': True, 'content': ''}
         return result
     except Exception as ex: # pylint: disable=broad-exception-caught
-        result = {'result': False, 'content': str(ex)}
+        str_out = 'Exit script error'
+        f_name = inspect.currentframe().f_code.co_name
+        logger.critical(str_out)
+        logger.critical(f_name)
+        logger.critical(str(ex))
+        result = {'result': False, 'content': f'{str_out}. {f_name}. {str(ex)}'}
         return result
 
 
@@ -139,7 +158,12 @@ def tb_init_deels(in_table_name, in_conn=None, in_c=None):
             result = {'result': True, 'content': f'Statement "{tid_statement}" done'}
             return result
     except Exception as ex: # pylint: disable=broad-exception-caught
-        result = {'result': False, 'content': f'Statement "{tid_statement}" exception "{str(ex)}"'}
+        str_out = 'Table initialization deels error'
+        f_name = inspect.currentframe().f_code.co_name
+        logger.critical(str_out)
+        logger.critical(f_name)
+        logger.critical(str(ex))
+        result = {'result': False, 'content': f'{str_out}. {f_name}. {str(ex)}'}
         return result
 
 
@@ -172,9 +196,12 @@ def get_price_back(in_table_name='',
             gpb_statement = f'select price from "{table_name}" where date = "{gpb_dt}" limit 1;'
             price = in_c.execute(gpb_statement).fetchone()
     except Exception as ex: # pylint: disable=broad-exception-caught
-        logger.critical(inspect.currentframe().f_code.co_name)
+        str_out = 'Get price back error'
+        f_name = inspect.currentframe().f_code.co_name
+        logger.critical(str_out)
+        logger.critical(f_name)
         logger.critical(str(ex))
-        result = {'result': False, 'content': f'{inspect.currentframe().f_code.co_name}. {str(ex)}'}
+        result = {'result': False, 'content': f'{str_out}. {f_name}. {str(ex)}'}
         return result
     if price:
         price = price[0]
@@ -195,9 +222,12 @@ def get_date_back(in_table_name, in_conn=None, in_c=None):
             gdb_statement = f'select date from "{table_name}" order by rowid desc limit 1;'
             date = in_c.execute(gdb_statement).fetchone()
     except Exception as ex: # pylint: disable=broad-exception-caught
-        logger.critical(inspect.currentframe().f_code.co_name)
+        str_out = 'Get date back error'
+        f_name = inspect.currentframe().f_code.co_name
+        logger.critical(str_out)
+        logger.critical(f_name)
         logger.critical(str(ex))
-        result = {'result': False, 'content': str(ex)}
+        result = {'result': False, 'content': f'{str_out}. {f_name}. {str(ex)}'}
         return result
     if date:
         date = date[0]
@@ -509,9 +539,12 @@ def get_active_deels(in_table_name, in_conn=None, in_c=None):
             gad_statement = f'select status from "{table_name}" where status == "active";'
             state = in_c.execute(gad_statement).fetchone()
     except Exception as ex: # pylint: disable=broad-exception-caught
-        logger.critical(inspect.currentframe().f_code.co_name)
+        str_out = 'Get active deel error'
+        f_name = inspect.currentframe().f_code.co_name
+        logger.critical(str_out)
+        logger.critical(f_name)
         logger.critical(str(ex))
-        result = {'result': False, 'content': 'Data base connection fail'}
+        result = {'result': False, 'content': f'{str_out}. {f_name}. {str(ex)}'}
         return result
     if state:
         state = state[0]
@@ -581,9 +614,13 @@ def close_deel(in_sym, in_conn=None, in_c=None):
                          'where status = "active" limit 1;')
             date = in_c.execute(cd_statement).fetchone()
     except Exception as ex: # pylint: disable=broad-exception-caught
-        logger.critical(inspect.currentframe().f_code.co_name)
+        str_out = 'Close deel error'
+        f_name = inspect.currentframe().f_code.co_name
+        logger.critical(str_out)
+        logger.critical(f_name)
         logger.critical(str(ex))
-        result = {'result': False, 'content': str(ex)}
+        result = {'result': False, 'content': f'{str_out}. {f_name}. {str(ex)}'}
+        return result
     if date:
         date = date[0]
         result = {'result': True, 'content': date}
@@ -603,8 +640,13 @@ def get_current_balance(in_qp_provider):
         result = {'result': True, 'content': gcb_cur_balance}
         return result
     except Exception as ex: # pylint: disable=broad-exception-caught
-        str_out = f'Cant get current balance. Excepion is {str(ex)}' # pylint: disable=redefined-outer-name
-        result = {'result': False, 'content': str_out}
+        str_out = 'Get current balance error'
+        f_name = inspect.currentframe().f_code.co_name
+        logger.critical(str_out)
+        logger.critical(f_name)
+        logger.critical(str(ex))
+        result = {'result': False, 'content': f'{str_out}. {f_name}. {str(ex)}'}
+        return result
 
 
 def get_lot_price(in_class_code='QJSIM',
@@ -638,9 +680,12 @@ def get_deel_quant(in_table_name, in_conn=None, in_c=None):
                          'where status == "active" limit 1;')
             state = in_c.execute(gdq_statement).fetchone()
     except Exception as ex: # pylint: disable=broad-exception-caught
-        logger.critical(inspect.currentframe().f_code.co_name)
+        str_out = 'Get deel quantity error'
+        f_name = inspect.currentframe().f_code.co_name
+        logger.critical(str_out)
+        logger.critical(f_name)
         logger.critical(str(ex))
-        result = {'result': False, 'content': str(ex)}
+        result = {'result': False, 'content': f'{str_out}. {f_name}. {str(ex)}'}
         return result
     if state:
         state = state[0]
