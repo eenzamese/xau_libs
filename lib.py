@@ -1,5 +1,4 @@
 """Trading module includes Quik connection to MOEX, NASDAQ connection to off website"""
-import re
 import logging
 import inspect
 import random
@@ -27,47 +26,46 @@ def get_nasdaq_idx(in_idx_name='XAU'):
     str_out = f'Index is {idx_name}' # pylint: disable=redefined-outer-name
     logger.debug(str_out)
     nasdaq_url = 'https://indexes.nasdaqomx.com/index/FundamentalData'
-    result = {'result': False, 'content': ''}
     cookies = {
-        '__RequestVerificationToken': ('Vw3TAJP8BaxBKTW6PWQWe-9pg-'
-                                       'oXb6l7I6OlSD-'
-                                       '3M6FQDIKIlVwhJorA4w3BfH5fpglRRfqfi-'
-                                       'U3PndTVzYlurIYU6pnL_t8Z7c0rrYRtAQ1'),
-        'NSC_W.HJX.XXX.443': ('14b5a3d90fc929f377553f0905123e00e846a'
-                              '375d562bfcf213568d44958e278b8b3c186'),
-        'visid_incap_2594168': ('VYYgLwO/Sci8MMkIY00waUhq12YAA'
-                                'AAAQUIPAAAAAADVCXsVA3eH6zYg4F9cST4u'),
-        'nlbi_2594168': 'hpFGIHpD2B7hdV9USCe9RgAAAAADnaNjNqnLEZC5NDLbeApS',
-        '_biz_uid': 'ebd99242490d494bf101106d0a18334a',
-        '_ga': 'GA1.1.557386950.1725393485',
-        '_mkto_trk': 'id:303-QKM-463&token:_mch-nasdaqomx.com-1725393485337-45399',
-        '_biz_flagsA': ('%7B%22Version%22%3A1%2C%22View'
-                        'Through%22%3A%221%22%2C%22X'
-                        'Domain%22%3A%221%22%2C%22Mkto%22%3A%221%22%7D'),
-        'incap_ses_1686_2594168': '69paenxeeiXg87fwHOBlFzES32YAAAAAS8n0Dn/nMvlXIEjU+rEhJg==',
-        '_biz_nA': '16',
-        '_biz_pendingA': '%5B%5D',
-        '_ga_5YP0JZFRFE': 'GS1.1.1725895220.6.0.1725895220.60.0.0',
-    }
+                '__RequestVerificationToken': ('Vw3TAJP8BaxBKTW6PWQWe-9pg-'
+                                            'oXb6l7I6OlSD-'
+                                            '3M6FQDIKIlVwhJorA4w3BfH5fpglRRfqfi-'
+                                            'U3PndTVzYlurIYU6pnL_t8Z7c0rrYRtAQ1'),
+                'NSC_W.HJX.XXX.443': ('14b5a3d90fc929f377553f0905123e00e846a'
+                                    '375d562bfcf213568d44958e278b8b3c186'),
+                'visid_incap_2594168': ('VYYgLwO/Sci8MMkIY00waUhq12YAA'
+                                        'AAAQUIPAAAAAADVCXsVA3eH6zYg4F9cST4u'),
+                'nlbi_2594168': 'hpFGIHpD2B7hdV9USCe9RgAAAAADnaNjNqnLEZC5NDLbeApS',
+                '_biz_uid': 'ebd99242490d494bf101106d0a18334a',
+                '_ga': 'GA1.1.557386950.1725393485',
+                '_mkto_trk': 'id:303-QKM-463&token:_mch-nasdaqomx.com-1725393485337-45399',
+                '_biz_flagsA': ('%7B%22Version%22%3A1%2C%22View'
+                                'Through%22%3A%221%22%2C%22X'
+                                'Domain%22%3A%221%22%2C%22Mkto%22%3A%221%22%7D'),
+                'incap_ses_1686_2594168': '69paenxeeiXg87fwHOBlFzES32YAAAAAS8n0Dn/nMvlXIEjU+rEhJg==',
+                '_biz_nA': '16',
+                '_biz_pendingA': '%5B%5D',
+                '_ga_5YP0JZFRFE': 'GS1.1.1725895220.6.0.1725895220.60.0.0',
+               }
 
     headers = {
-        'accept': '*/*',
-        'accept-language': 'en-US,en;q=0.9',
-        'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
-        'origin': 'https://indexes.nasdaqomx.com',
-        'priority': 'u=1, i',
-        'referer': 'https://indexes.nasdaqomx.com/Index/Overview/XAU',
-        'sec-ch-ua': '"Chromium";v="128", "Not;A=Brand";v="24", "Google Chrome";v="128"',
-        'sec-ch-ua-mobile': '?0',
-        'sec-ch-ua-platform': '"Windows"',
-        'sec-fetch-dest': 'empty',
-        'sec-fetch-mode': 'cors',
-        'sec-fetch-site': 'same-origin',
-        'user-agent': ('Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
-                       'AppleWebKit/537.36 (KHTML, like Gecko) '
-                       'Chrome/128.0.0.0 Safari/537.36'),
-        'x-requested-with': 'XMLHttpRequest',
-    }
+                'accept': '*/*',
+                'accept-language': 'en-US,en;q=0.9',
+                'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                'origin': 'https://indexes.nasdaqomx.com',
+                'priority': 'u=1, i',
+                'referer': 'https://indexes.nasdaqomx.com/Index/Overview/XAU',
+                'sec-ch-ua': '"Chromium";v="128", "Not;A=Brand";v="24", "Google Chrome";v="128"',
+                'sec-ch-ua-mobile': '?0',
+                'sec-ch-ua-platform': '"Windows"',
+                'sec-fetch-dest': 'empty',
+                'sec-fetch-mode': 'cors',
+                'sec-fetch-site': 'same-origin',
+                'user-agent': ('Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
+                            'AppleWebKit/537.36 (KHTML, like Gecko) '
+                            'Chrome/128.0.0.0 Safari/537.36'),
+                'x-requested-with': 'XMLHttpRequest',
+              }
 
     data = {'id': 'XAU',}
     try:
@@ -138,12 +136,11 @@ def tb_init_deels(in_table_name, in_conn=None, in_c=None):
                               'status float, '
                               'amount text);')
             in_c.execute(tid_statement)
-            result['result'] = True
-            result['content'] = f'Statement "{tid_statement}" done'
+            result = {'result': True, 'content': f'Statement "{tid_statement}" done'}
+            return result
     except Exception as ex: # pylint: disable=broad-exception-caught
-        result['result'] = False
-        result['content'] = f'Statement "{tid_statement}" exception "{str(ex)}"'
-    return result
+        result = {'result': False, 'content': f'Statement "{tid_statement}" exception "{str(ex)}"'}
+        return result
 
 
 def check_quik_connection(in_qp_provider=None):
@@ -162,10 +159,6 @@ def check_quik_connection(in_qp_provider=None):
     return result
 
 
-#def get_price_back(in_table_name=BASE_TICKER,
-#                   in_datetime='2024-09-04 21:00:00',
-#                   in_conn=None,
-#                   in_c=None):
 def get_price_back(in_table_name='',
                    in_datetime='2024-09-04 21:00:00',
                    in_conn=None,
@@ -240,12 +233,12 @@ def is_internet(in_hosts=[]): # pylint: disable=dangerous-default-value
         else:
             result = {'result': True, 'content': 'Internet connection is OK'}
             return result
-    result['content'] = 'There are no available hosts'
+    result = {'result': False, 'content': 'There are no available hosts'}
     return result
 
 
 def on_trans_reply(data):
-    """Обработчик события ответа на транзакцию пользователя"""
+    """transaction reply processing"""
     result = {'result': False, 'content': ''}
     str_out = f'OnTransReply: {data}' # pylint: disable=redefined-outer-name
     logger.info(str_out)
@@ -273,7 +266,7 @@ def open_long(in_class_code='QJSIM',
     if not account:  # Если счет не найден
         str_out = f'Торговый счет для режима торгов {class_code} не найден' # pylint: disable=redefined-outer-name
         logger.error(str_out)
-        result = {'result': False, 'content': ''}
+        result = {'result': False, 'content': str_out}
         return result
     client_code = account['client_code'] if account['client_code'] else ''
     trade_account_id = account['trade_account_id']
@@ -494,11 +487,13 @@ def fix_deel(in_tb_name, in_state, in_quant, in_conn=None, in_c=None):
         with in_conn:
             fd_statement = f"update '{tb_name}_deels' set status = '{state}';"
             in_c.execute(fd_statement)
+        result = {'result': True, 'content': 'Transaction processed'}
         return result
     with in_conn:
         fd_1_statement = f"insert into '{tb_name}_deels' \
                           values('{dt.now()}', '{state}', '{in_quant}');"
         in_c.execute(fd_1_statement)
+        result = {'result': True, 'content': 'Setting transaction processed'}
     return result
 
 
@@ -513,7 +508,8 @@ def get_active_deels(in_table_name, in_conn=None, in_c=None):
     except Exception as ex: # pylint: disable=broad-exception-caught
         logger.critical(inspect.currentframe().f_code.co_name)
         logger.critical(str(ex))
-        sys.exit()
+        result = {'result': False, 'content': 'Data base connection fail'}
+        return result
     if state:
         state = state[0]
         result = {'result': True, 'content': state}
@@ -524,6 +520,7 @@ def get_active_deels(in_table_name, in_conn=None, in_c=None):
         return result
 
 
+# to remove
 def load_db_content(in_conn=None, in_c=None):
     """Imitate DB content"""
     result = {'result': False, 'content': ''}
@@ -599,7 +596,6 @@ def get_current_balance(in_qp_provider):
     result = {'result': False, 'content': ''}
     qp_provider = in_qp_provider
     try:
-        result = {'result': False, 'content': ''}
         gcb_cur_balance = qp_provider.get_money_limits()['data'][0]['currentbal']
         result = {'result': True, 'content': gcb_cur_balance}
     except Exception as ex: # pylint: disable=broad-exception-caught
