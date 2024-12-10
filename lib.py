@@ -147,7 +147,7 @@ def check_quik_connection(in_qp_provider=None):
     """Checking QUIK connection"""
     result = {'result': False, 'content': ''}
     qp_provider = in_qp_provider
-    # Состояние подключения терминала к серверу QUIK
+    # QUIK terminal - QUIK server connection state
     is_connected = qp_provider.is_connected()['data']
     if is_connected == 0:
         str_out = 'QUIK connection failed' # pylint: disable=redefined-outer-name
@@ -172,9 +172,10 @@ def get_price_back(in_table_name='',
             gpb_statement = f'select price from "{table_name}" where date = "{gpb_dt}" limit 1;'
             price = in_c.execute(gpb_statement).fetchone()
     except Exception as ex: # pylint: disable=broad-exception-caught
-        print(ex)
-        print(inspect.currentframe().f_code.co_name)
-        sys.exit()
+        logger.critical(inspect.currentframe().f_code.co_name)
+        logger.critical(str(ex))
+        result = {'result': False, 'content': f'{inspect.currentframe().f_code.co_name}. {str(ex)}'}
+        return result
     if price:
         price = price[0]
         result = {'result': True, 'content': price}
@@ -244,8 +245,8 @@ def on_trans_reply(data):
     logger.info(str_out)
     order_num = int(data['data']['order_num'])  # Номер заявки на бирже
     str_out = f'Номер транзакции: {data["data"]["trans_id"]}, Номер заявки: {order_num}'
-    result = {'result': True, 'content': ''}
     logger.info(str_out)
+    result = {'result': True, 'content': ''}
     return result
 
 
@@ -383,7 +384,8 @@ def close_long(in_class_code='QJSIM',
     if not account:  # Если счет не найден
         str_out = f'Торговый счет для режима торгов {in_class_code} не найден' # pylint: disable=redefined-outer-name
         logger.error(str_out)
-        return False
+        result = {'result': False, 'content': str_out}
+        return result
     client_code = account['client_code'] if account['client_code'] else ''
     # Счет
     trade_account_id = account['trade_account_id']
@@ -494,7 +496,7 @@ def fix_deel(in_tb_name, in_state, in_quant, in_conn=None, in_c=None):
                           values('{dt.now()}', '{state}', '{in_quant}');"
         in_c.execute(fd_1_statement)
         result = {'result': True, 'content': 'Setting transaction processed'}
-    return result
+        return result
 
 
 def get_active_deels(in_table_name, in_conn=None, in_c=None):
@@ -598,10 +600,10 @@ def get_current_balance(in_qp_provider):
     try:
         gcb_cur_balance = qp_provider.get_money_limits()['data'][0]['currentbal']
         result = {'result': True, 'content': gcb_cur_balance}
+        return result
     except Exception as ex: # pylint: disable=broad-exception-caught
         str_out = f'Cant get current balance. Excepion is {str(ex)}' # pylint: disable=redefined-outer-name
         result = {'result': False, 'content': str_out}
-    return result
 
 
 def get_lot_price(in_class_code='QJSIM',
