@@ -1,6 +1,6 @@
 # -*- mode: python -*-
 
-a = Analysis(['lib.py'],
+a = Analysis(['xau_libs.py'],
              binaries=[],
              datas=[],
              hiddenimports=[],
@@ -16,7 +16,7 @@ exe = EXE(
     a.binaries,
     a.zipfiles,
     a.datas,
-    name='lib',
+    name='xau_libs',
     debug=False,
     strip=False,
     upx=True,
