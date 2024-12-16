@@ -1,8 +1,11 @@
 # -*- mode: python -*-
 
+added_data = [('QuikPy\\QuikPy.py', 'QuikPy\\QuikPy.py')]
+
+
 a = Analysis(['xau_libs.py'],
              binaries=[],
-             datas=[],
+             datas=added_data,
              hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],
