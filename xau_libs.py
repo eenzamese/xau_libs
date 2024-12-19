@@ -4,6 +4,7 @@ import inspect
 import time
 import json
 import os
+import re
 import platform
 import itertools
 from subprocess import Popen, PIPE
