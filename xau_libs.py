@@ -100,25 +100,25 @@ def get_nasdaq_idx(in_idx_name='XAU'):
         return result
 
 
-def set_logging(in_app_name, in_run_mode, in_log_dir, in_log_filename):
+def set_logging(in_app_name, in_app_path, in_app_run_mode):
     """Set logger"""
+    result = {'result': False, 'content': ''}
     LOG_START_TIME = re.sub(r"\W+", "_", str(time.ctime()))
     LOG_FMT_STRING = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    app_path = dirname(sys.executable)
-    app_name = pathlib.Path(sys.executable).stem
-    LOG_DIR = f'{app_path}{sep}logs'
-    if not exists(in_log_dir):
-        mkdir(in_log_dir)
-    LOG_FILENAME = f'{in_log_dir}{sep}{in_app_name}_{LOG_START_TIME}.log'
+    LOG_DIR = f'{in_app_path}{sep}logs'
+    if not exists(LOG_DIR):
+        mkdir(LOG_DIR)
+    LOG_FILENAME = f'{LOG_DIR}{sep}{in_app_name}_{LOG_START_TIME}.log'
     log_handlers = [logging.StreamHandler()]
     if in_app_run_mode == 'PROD':
         log_handlers.append(logging.FileHandler(LOG_FILENAME))
-    logger = logging.getLogger(APP_RUNMODE)
+    logger = logging.getLogger(in_app_run_mode)
     logging.basicConfig(format=LOG_FMT_STRING,
                         datefmt='%d.%m.%Y %H:%M:%S',
                         level=logging.INFO, # NOTSET/DEBUG/INFO/WARNING/ERROR/CRITICAL
                         handlers=log_handlers)
-    return logger
+    result = {'result': True, 'content': logger}
+    return result
 
 
 def tb_init(in_table_name, in_conn=None, in_c=None):
