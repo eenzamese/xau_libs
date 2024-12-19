@@ -262,6 +262,25 @@ def get_date_back(in_table_name, in_conn=None, in_c=None):
         return result
 
 
+def hist_select_config(in_c=None, in_conn=None):
+    """Choose config"""
+    result = {'result': False, 'content': ''}
+    try:
+        with in_conn:
+            sc_query = 'select rowid, config \
+                        from configs \
+                        where result_ru=0 and result_en=0 \
+                        limit 1;'
+            sc_config_arr = in_c.execute(sc_query).fetchone()
+            logger.debug(sc_config_arr)
+            result = {'result': True, 'content': json.loads(sc_config_arr[1])}
+    except Exception as ex: # pylint: disable=broad-exception-caught
+        logger.critical(str(ex))
+        logger.critical("Selection configuration")
+        result = {'result': False, 'content': ''}
+    return result
+
+
 # legacy, will replaced soon
 def is_internet(in_hosts=[]): # pylint: disable=dangerous-default-value
     """Internet checking"""
