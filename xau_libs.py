@@ -3,10 +3,11 @@ import logging
 import inspect
 import time
 import json
-import os
 import re
 import platform
 import itertools
+from os import sep
+from os.path import exists
 from subprocess import Popen, PIPE
 from datetime import datetime as dt
 import requests # type: ignore # pylint: disable=import-error
