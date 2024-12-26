@@ -272,8 +272,12 @@ def hist_select_config(in_c=None, in_conn=None):
                         where result_ru=0 and result_en=0 \
                         limit 1;'
             sc_config_arr = in_c.execute(sc_query).fetchone()
-            logger.info(sc_config_arr)
-            result = {'result': True, 'content': json.loads(sc_config_arr[1])}
+            sc_config_final = json.loads(sc_config_arr[1])
+            logger.info(type(sc_config_final))
+            sc_config_final["rowid"] = sc_config_arr[0]
+            logger.debug("##################")
+            logger.debug(sc_config_final)
+            result = {'result': True, 'content': sc_config_final}
     except Exception as ex: # pylint: disable=broad-exception-caught
         logger.critical(str(ex))
         logger.critical("Selection configuration")
