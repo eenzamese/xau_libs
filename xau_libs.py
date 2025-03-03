@@ -140,21 +140,21 @@ def tb_init(in_table_name, in_conn=None, in_c=None):
                             '(tb_name text, tb_rowid text, '
                             'date text);')
             in_c.execute(ti_statement)
-        with conn:
+        with in_conn:
             ti_statement = ("""create trigger if not exists selg_sync_trigger 
                             after insert on SELG
                             begin
                                  insert into tb_sync values('SELG', select max(rowid) from SELG, SELECT date());
                             end;""")
             in_c.execute(ti_statement)
-        with conn:
+        with in_conn:
             ti_statement = ("""create trigger if not exists plzl_sync_trigger 
                             after insert on PLZL
                             begin
                                  insert into tb_sync values('PLZL', select max(rowid) from PLZL, SELECT date());
                             end;""")
             in_c.execute(ti_statement)
-        with conn:
+        with in_conn:
             ti_statement = ("""create trigger if not exists xau_sync_trigger 
                             after insert on XAU
                             begin
