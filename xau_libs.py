@@ -152,6 +152,7 @@ def trigger_init(in_trigger_name, in_conn=None, in_c=None):
     result = {'result': False, 'content': ''}
     trigger_name = in_trigger_name
     logger.info('Create trigger %s', trigger_name)
+    try:
         with in_conn:
             ti_statement = (f'create table if not exists tb_sync '
                             '(tb_name text, tb_rowid text, '
