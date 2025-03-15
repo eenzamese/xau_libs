@@ -135,6 +135,23 @@ def tb_init(in_table_name, in_conn=None, in_c=None):
                             '(date text, '
                             'price float);')
             in_c.execute(ti_statement)
+        result = {'result': True, 'content': ''}
+        return result
+    except Exception as ex: # pylint: disable=broad-exception-caught
+        str_out = 'Table initialization error'
+        f_name = inspect.currentframe().f_code.co_name
+        logger.critical(str_out)
+        logger.critical(f_name)
+        logger.critical(str(ex))
+        result = {'result': False, 'content': f'{str_out}. {f_name}. {str(ex)}'}
+        return result
+
+
+def trigger_init(in_trigger_name, in_conn=None, in_c=None):
+    """Get table initialization"""
+    result = {'result': False, 'content': ''}
+    trigger_name = in_trigger_name
+    logger.info('Create trigger %s', trigger_name)
         with in_conn:
             ti_statement = (f'create table if not exists tb_sync '
                             '(tb_name text, tb_rowid text, '
@@ -171,6 +188,7 @@ def tb_init(in_table_name, in_conn=None, in_c=None):
         logger.critical(str(ex))
         result = {'result': False, 'content': f'{str_out}. {f_name}. {str(ex)}'}
         return result
+
 
 
 def exit_script(in_qp_provider=None):
