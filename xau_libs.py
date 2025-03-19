@@ -162,21 +162,21 @@ def trigger_init(in_trigger_name, in_conn=None, in_c=None):
             ti_statement = ("""create trigger if not exists selg_sync_trigger 
                             after insert on SELG
                             begin
-                                 insert into tb_sync values('SELG', (select max(rowid) from SELG), (SELECT date()));
+                                 insert into tb_sync values('SELG', (select max(rowid) from SELG), (SELECT strftime('%Y-%m-%d %H:%M:%S', datetime('now'))));
                             end;""")
             in_c.execute(ti_statement)
         with in_conn:
             ti_statement = ("""create trigger if not exists plzl_sync_trigger 
                             after insert on PLZL
                             begin
-                                 insert into tb_sync values('PLZL', (select max(rowid) from PLZL), (SELECT date()));
+                                 insert into tb_sync values('PLZL', (select max(rowid) from PLZL), (SELECT strftime('%Y-%m-%d %H:%M:%S', datetime('now'))));
                             end;""")
             in_c.execute(ti_statement)
         with in_conn:
             ti_statement = ("""create trigger if not exists xau_sync_trigger 
                             after insert on XAU
                             begin
-                                 insert into tb_sync values('XAU', (select max(rowid) from XAU), (SELECT date()));
+                                 insert into tb_sync values('XAU', (select max(rowid) from XAU), (SELECT strftime('%Y-%m-%d %H:%M:%S', datetime('now'))));
                             end;""")
             in_c.execute(ti_statement)
         result = {'result': True, 'content': ''}
