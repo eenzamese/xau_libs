@@ -159,6 +159,15 @@ def trigger_init(in_trigger_name, in_conn=None, in_c=None):
                             'date text);')
             in_c.execute(ti_statement)
         with in_conn:
+            ti_statement = (f'create table if not exists analytics '
+                            '(current_base_price text, past_base_price text, '
+                            'min_base text, diff_base text, '
+                            'koef_base text, dname text, '
+                            'current_dname text, past_dname text, '
+                            'min_dname text, diff_dname text, '
+                            'dname_koef text);')
+            in_c.execute(ti_statement)
+        with in_conn:
             ti_statement = ("""create trigger if not exists selg_sync_trigger 
                             after insert on SELG
                             begin
