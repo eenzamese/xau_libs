@@ -269,7 +269,12 @@ def get_price_back(in_table_name='',
     try:
         with in_conn:
             gpb_statement = f'select price from "{table_name}" where date = "{gpb_dt}" limit 1;'
+            # print("--------------")
+            logger.info(gpb_statement)
+            # print("--------------")
             price = in_c.execute(gpb_statement).fetchone()
+            print(price)
+            logger.info("Back price was got successfully")
     except Exception as ex: # pylint: disable=broad-exception-caught
         str_out = 'Get price back error'
         f_name = inspect.currentframe().f_code.co_name
@@ -295,7 +300,7 @@ def get_date_back(in_table_name, in_conn=None, in_c=None):
     table_name = in_table_name
     try:
         with in_conn:
-            gdb_statement = f'select date from "{table_name}" order by rowid desc limit 1;'
+            gdb_statement = f'select date from "{table_name}" order by date desc limit 1;'
             date = in_c.execute(gdb_statement).fetchone()
     except Exception as ex: # pylint: disable=broad-exception-caught
         str_out = 'Get date back error'
